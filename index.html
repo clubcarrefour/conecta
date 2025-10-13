@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flipbook Carrefour</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .flipbook-container {
+      width: 80%; /* Ajusta el ancho según sea necesario */
+      max-width: 800px; /* Ancho máximo para pantallas grandes */
+      overflow: hidden;
+      position: relative;
+    }
+
+    .flipbook {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .page {
+      flex-shrink: 0;
+      width: 100%; /* Cada página ocupa el 100% del contenedor */
+      height: auto; /* Ajusta la altura automáticamente */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; /* Para evitar que las imágenes sobresalgan */
+    }
+
+    .page img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .nav-button:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .nav-prev {
+      left: 10px;
+    }
+
+    .nav-next {
+      right: 10px;
+    }
+
+    /* Estilos para móvil */
+    @media (max-width: 600px) {
+      .flipbook-container {
+        width: 100%;
+      }
+      .page {
+        width: 100vw;
+      }
+      .nav-button {
+        display: none; /* Opcional: Ocultar los botones en móvil y usar solo el touch */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flipbook-container">
+    <div class="flipbook">
+      <div class="page" data-page="1"><img src="1.webp" alt="Página 1"></div>
+      <div class="page" data-page="2"><img src="2.webp" alt="Página 2"></div>
+      <div class="page" data-page="3"><img src="3.webp" alt="Página 3"></div>
+      <div class="page" data-page="4"><img src="4.webp" alt="Página 4"></div>
+      <div class="page" data-page="5"><img src="5.webp" alt="Página 5"></div>
+      <div class="page" data-page="6"><img src="6.webp" alt="Página 6"></div>
+      <div class="page" data-page="7"><img src="7.webp" alt="Página 7"></div>
+      <div class="page" data-page="8"><img src="8.webp" alt="Página 8"></div>
+      <div class="page" data-page="9"><img src="9.webp" alt="Página 9"></div>
+      <div class="page" data-page="10"><img src="10.webp" alt="Página 10"></div>
+      <div class="page" data-page="11"><img src="11.webp" alt="Página 11"></div>
+      <div class="page" data-page="12"><img src="12.webp" alt="Página 12"></div>
+      <div class="page" data-page="13"><img src="13.webp" alt="Página 13"></div>
+      <div class="page" data-page="14"><img src="14.webp" alt="Página 14"></div>
+      <div class="page" data-page="15"><img src="15.webp" alt="Página 15"></div>
+      <div class="page" data-page="16"><img src="16.webp" alt="Página 16"></div>
+      <div class="page" data-page="17"><img src="17.webp" alt="Página 17"></div>
+      <div class="page" data-page="18"><img src="18.webp" alt="Página 18"></div>
+      <div class="page" data-page="19"><img src="19.webp" alt="Página 19"></div>
+      <div class="page" data-page="20"><img src="20.webp" alt="Página 20"></div>
+      <div class="page" data-page="21"><img src="21.webp" alt="Página 21"></div>
+      <!--PONER AQUÍ LAS PÁGINAS COPÓN!!!!!-->>
+    </div>
+
+    <button class="nav-button nav-prev">Anterior</button>
+    <button class="nav-button nav-next">Siguiente</button>
+  </div>
+
+  <script>
+    const flipbook = document.querySelector('.flipbook');
+    const pages = document.querySelectorAll('.page');
+    const prevButton = document.querySelector('.nav-prev');
+    const nextButton = document.querySelector('.nav-next');
+    let currentPage = 1;
+    const totalPages = pages.length;
+
+    function updateView() {
+      let translateX = 0;
+
+      if (currentPage === 1) {
+        translateX = 0; // Mostrar solo la primera página
+      } else if (currentPage === totalPages) {
+        translateX = -(totalPages - 1) * 100; // Mostrar solo la última página
+      } else {
+        translateX = -(currentPage - 1) * 100; // Mostrar 2 páginas
+      }
+
+      flipbook.style.transform = `translateX(${translateX}%)`;
+    }
+
+    function goToNextPage() {
+        if (currentPage < totalPages) {
+            if(currentPage===1){
+                currentPage =2;
+            }else{
+              currentPage++;
+            }
+        } else {
+            currentPage = 1; // Vuelve a la primera página
+        }
+        updateView();
+    }
+
+    function goToPrevPage() {
+      if (currentPage > 1) {
+        if(currentPage===2){
+            currentPage=1
+        }else{
+            currentPage--
+        }
+        updateView();
+      } else {
+          currentPage = totalPages; // Vuelve a la última página
+          updateView()
+      }
+    }
+
+    nextButton.addEventListener('click', goToNextPage);
+    prevButton.addEventListener('click', goToPrevPage);
+
+    // Touch events for mobile
+    let touchStartX = 0;
+
+    flipbook.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    flipbook.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchDiff = touchEndX - touchStartX;
+
+      if (touchDiff > 50) {
+        goToPrevPage(); // Swipe right
+      } else if (touchDiff < -50) {
+        goToNextPage(); // Swipe left
+      }
+    });
+
+    // Initial view
+    updateView();
+  </script>
+
+</body>
+</html>
