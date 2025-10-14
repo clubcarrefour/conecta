@@ -24,7 +24,7 @@
 
     .flipbook {
       display: flex;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none;
       will-change: transform;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -57,18 +57,15 @@
       position: absolute;
       top: 0;
       height: 100%;
-      width: 50%;
       z-index: 20;
       cursor: pointer;
+      background: transparent;
     }
-    
-    .touch-prev {
-      left: 0;
-    }
-    
-    .touch-next {
-      right: 0;
-    }
+
+    /* Dividir en 3 tercios: prev | mid | next */
+    .touch-prev { left: 0; width: 33.3333%; }
+    .touch-mid { left: 33.3333%; width: 33.3333%; }
+    .touch-next { right: 0; width: 33.3333%; }
 
     .nav-button {
       position: absolute;
@@ -111,31 +108,32 @@
 <body>
 
   <div class="flipbook-container">
-    <div class="touch-area touch-prev"></div>
-    <div class="touch-area touch-next"></div>
+    <div class="touch-area touch-prev" aria-label="Anterior"></div>
+    <div class="touch-area touch-mid" aria-label="Enlace central"></div>
+    <div class="touch-area touch-next" aria-label="Siguiente"></div>
     <div class="flipbook">
       <div class="page" data-page="1"><img src="1.webp" alt="Página 1" loading="eager"></div>
-      <div class="page" data-page="2"><img src="2.webp" alt="Página 2"></div>
-      <div class="page" data-page="3"><img src="3.webp" alt="Página 3"></div>
-      <div class="page" data-page="4"><img src="4.webp" alt="Página 4"></div>
-      <div class="page" data-page="5"><img src="5.webp" alt="Página 5"></div>
-      <div class="page" data-page="6"><img src="6.webp" alt="Página 6"></div>
-      <div class="page" data-page="7"><img src="7.webp" alt="Página 7"></div>
-      <div class="page" data-page="8"><img src="8.webp" alt="Página 8"></div>
-      <div class="page" data-page="9"><img src="9.webp" alt="Página 9"></div>
-      <div class="page" data-page="10"><img src="10.webp" alt="Página 10"></div>
-      <div class="page" data-page="11"><img src="11.webp" alt="Página 11"></div>
-      <div class="page" data-page="12"><img src="12.webp" alt="Página 12"></div>
-      <div class="page" data-page="13"><img src="13.webp" alt="Página 13"></div>
-      <div class="page" data-page="14"><img src="14.webp" alt="Página 14"></div>
-      <div class="page" data-page="15"><img src="15.webp" alt="Página 15"></div>
-      <div class="page" data-page="16"><img src="16.webp" alt="Página 16"></div>
-      <div class="page" data-page="17"><img src="17.webp" alt="Página 17"></div>
-      <div class="page" data-page="18"><img src="18.webp" alt="Página 18"></div>
-      <div class="page" data-page="19"><img src="19.webp" alt="Página 19"></div>
-      <div class="page" data-page="20"><img src="20.webp" alt="Página 20"></div>
-      <div class="page" data-page="21"><img src="21.webp" alt="Página 21"></div>
-      <!--PONER AQUÍ LAS PÁGINAS COPÓN!!!!!-->>
+      <div class="page" data-page="2"><img src="2.webp" alt="Página 2" loading="lazy"></div>
+      <div class="page" data-page="3"><img src="3.webp" alt="Página 3" loading="lazy"></div>
+      <div class="page" data-page="4"><img src="4.webp" alt="Página 4" loading="lazy"></div>
+      <div class="page" data-page="5"><img src="5.webp" alt="Página 5" loading="lazy"></div>
+      <div class="page" data-page="6"><img src="6.webp" alt="Página 6" loading="lazy"></div>
+      <div class="page" data-page="7"><img src="7.webp" alt="Página 7" loading="lazy"></div>
+      <div class="page" data-page="8"><img src="8.webp" alt="Página 8" loading="lazy"></div>
+      <div class="page" data-page="9"><img src="9.webp" alt="Página 9" loading="lazy"></div>
+      <div class="page" data-page="10"><img src="10.webp" alt="Página 10" loading="lazy"></div>
+      <div class="page" data-page="11"><img src="11.webp" alt="Página 11" loading="lazy"></div>
+      <div class="page" data-page="12"><img src="12.webp" alt="Página 12" loading="lazy"></div>
+      <div class="page" data-page="13"><img src="13.webp" alt="Página 13" loading="lazy"></div>
+      <div class="page" data-page="14"><img src="14.webp" alt="Página 14" loading="lazy"></div>
+      <div class="page" data-page="15"><img src="15.webp" alt="Página 15" loading="lazy"></div>
+      <div class="page" data-page="16"><img src="16.webp" alt="Página 16" loading="lazy"></div>
+      <div class="page" data-page="17"><img src="17.webp" alt="Página 17" loading="lazy"></div>
+      <div class="page" data-page="18"><img src="18.webp" alt="Página 18" loading="lazy"></div>
+      <div class="page" data-page="19"><img src="19.webp" alt="Página 19" loading="lazy"></div>
+      <div class="page" data-page="20"><img src="20.webp" alt="Página 20" loading="lazy"></div>
+      <div class="page" data-page="21"><img src="21.webp" alt="Página 21" loading="lazy"></div>
+      <!--PONER AQUÍ LAS PÁGINAS COPÓN!!!!!--> 
     </div>
 
     <button class="nav-button nav-prev">Anterior</button>
@@ -147,19 +145,31 @@
     const pages = document.querySelectorAll('.page');
     const prevButton = document.querySelector('.nav-prev');
     const nextButton = document.querySelector('.nav-next');
-    const touchPrevArea = document.querySelector('.touch-prev');
-    const touchNextArea = document.querySelector('.touch-next');
+  const touchPrevArea = document.querySelector('.touch-prev');
+  const touchMidArea = document.querySelector('.touch-mid');
+  const touchNextArea = document.querySelector('.touch-next');
     let currentPage = 1;
     const totalPages = pages.length;
     
-    // Precarga de imágenes
-    function preloadImages() {
-      for (let i = 1; i <= totalPages; i++) {
-        const img = new Image();
-        img.src = `${i}.webp`;
-      }
+    // Precarga ligera: solo páginas adyacentes para mantener rápida la carga inicial
+    function preloadAdjacent(index) {
+      [index - 1, index + 1].forEach((i) => {
+        if (i >= 1 && i <= totalPages) {
+          const img = new Image();
+          img.src = `${i}.webp`;
+        }
+      });
     }
-    preloadImages();
+    // Preload first adjacent pages
+    preloadAdjacent(1);
+
+    // Mapa de enlaces para el tercio medio por número de página
+    const midLinks = {
+      3: 'https://www.facebook.com/groups/clubcarrefourfamilia/posts/1227591265691990/',
+      12: 'https://www.carrefour.es/clubcarrefour/clubs-deportivos/',
+      16: 'https://www.whatsapp.com/channel/0029Vasje9C17EmpFGiuhO0p',
+      18: 'https://www.carrefour.es/clubcarrefour/comunidades/'
+    };
 
     function updateView() {
       let translateX = 0;
@@ -173,6 +183,8 @@
       }
 
       flipbook.style.transform = `translateX(${translateX}%)`;
+      // Preload adjacent images for the new page
+      preloadAdjacent(currentPage);
     }
 
     function goToNextPage() {
@@ -202,12 +214,30 @@
       }
     }
 
-    nextButton.addEventListener('click', goToNextPage);
-    prevButton.addEventListener('click', goToPrevPage);
-    touchNextArea.addEventListener('click', goToNextPage);
-    touchPrevArea.addEventListener('click', goToPrevPage);
+    // Pointer events for faster response on supported devices
+    const addFastHandler = (el, fn) => {
+      if (!el) return;
+      el.addEventListener('pointerdown', (e) => { e.preventDefault(); fn(); });
+      el.addEventListener('click', fn);
+    };
 
-    // Touch events for mobile
+    addFastHandler(nextButton, goToNextPage);
+    addFastHandler(prevButton, goToPrevPage);
+    addFastHandler(touchNextArea, goToNextPage);
+    addFastHandler(touchPrevArea, goToPrevPage);
+
+    // Middle area: if current page has a link, open it; otherwise go next
+    function onTouchMid() {
+      const link = midLinks[currentPage];
+      if (link) {
+        window.open(link, '_blank');
+      } else {
+        goToNextPage();
+      }
+    }
+    addFastHandler(touchMidArea, onTouchMid);
+
+  // Touch events for mobile and swipe handling
     let touchStartX = 0;
     let touchStartY = 0;
     let isSwiping = false;
@@ -250,6 +280,12 @@
       
       isSwiping = false;
     }, { passive: true });
+
+    // Keyboard navigation (flechas)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') goToNextPage();
+      if (e.key === 'ArrowLeft') goToPrevPage();
+    });
 
     // Initial view
     updateView();
