@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flipbook sencillo</title>
+  <title>📰 Conecta. La revista de El Club Carrefour</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #222;
+      background: #ffffff;
       color: #fff;
       font-family: sans-serif;
       display: flex;
@@ -16,19 +16,21 @@
       min-height: 100vh;
     }
     .flipbook-container {
-      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: visible;
       position: relative;
       background: #ffffff;
       touch-action: manipulation;
+      width: 600px;
+      height: 900px;
+      margin: 0 auto;
     }
     .flipbook-page {
-      width: 100vw;
+      width: 100%;
+      height: 100%;
       max-width: 600px;
-      height: 80vh;
       max-height: 900px;
       background: #fff;
       box-shadow: 0 4px 24px rgba(0,0,0,0.3);
@@ -54,13 +56,13 @@
     }
     .central-strip a {
       color: #fff;
-      background: #0078d7;
-      padding: 0.5em 1.2em;
+      background: #055096;
+      padding: 0.3em 0.5em;
       border-radius: 20px;
       text-decoration: none;
       font-weight: bold;
       font-size: 1.1em;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     img.page-img {
       width: 100%;
@@ -68,19 +70,84 @@
       object-fit: contain;
       display: block;
     }
+    /* Flechas de navegación laterales solo desktop */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3.5rem;
+      color: #fff;
+      background: rgba(0,120,215,0.92);
+      border-radius: 50%;
+      width: 2.7em;
+      height: 2.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      pointer-events: none;
+      z-index: 20;
+      border: 2px solid #0078d7;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      opacity: 1;
+      font-weight: bold;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .nav-arrow.left {
+      left: 1.2em;
+    }
+    .nav-arrow.right {
+      right: 1.2em;
+    }
     @media (max-width: 600px) {
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .flipbook-container {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
       .flipbook-page {
         max-width: 100vw;
-        max-height: 80vh;
+        max-height: 100vh;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      img.page-img {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        object-fit: contain;
+        display: block;
+      }
+      .nav-arrow {
+        display: none !important;
       }
     }
   </style>
 </head>
 <body>
   <div class="flipbook-container" id="flipbook">
+    <div class="nav-arrow left">&#60;</div>
+    <div class="nav-arrow right">&#62;</div>
     <!-- Página se renderiza aquí -->
   </div>
   <script>
+    alert('¡Bienvenido a nuestro número de noviembre de Conecta! Haz click en la parte izquierda y derecha de cada página para navegar por la revista 😊');
     // Lista de imágenes de páginas (puedes cambiar las URLs por las de tus páginas)
     const pages = [
       '1.webp',
