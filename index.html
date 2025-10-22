@@ -23,8 +23,13 @@
       position: relative;
       background: #ffffff;
       touch-action: manipulation;
-      width: 600px;
-      height: 900px;
+      /* mobile-first: max width is viewport, but never exceed desktop size */
+      width: min(100vw, 600px);
+      /* images are 600x900 => aspect ratio 2/3 (width/height) */
+      aspect-ratio: 2 / 3;
+      height: auto;
+      /* reserve space for thumbnails and small margins so they are visible without scrolling */
+      max-height: calc(100vh - 96px);
       margin: 0 auto;
     }
     .flipbook-page {
@@ -56,7 +61,7 @@
     }
     .central-strip a {
       color: #fff;
-      background: #7ff3ff;
+      background: #055096;
       padding: 0.3em 0.5em;
       border-radius: 20px;
       text-decoration: none;
@@ -69,6 +74,47 @@
       height: 100%;
       object-fit: contain;
       display: block;
+    }
+    /* Thumbnails debajo del flipbook (solo desktop) */
+    .thumbnails {
+      display: flex;
+      gap: 0.4rem;
+      padding: 0.4rem;
+      width: 100%;
+      max-width: 100%;
+      margin: 8px auto 12px auto;
+      overflow-x: auto;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      -webkit-overflow-scrolling: touch;
+    }
+    .thumbnails::-webkit-scrollbar{ height:6px }
+    .thumb {
+      width: 48px;
+      height: 72px;
+      flex: 0 0 auto;
+      object-fit: cover;
+      border-radius: 3px;
+      cursor: pointer;
+      opacity: 0.95;
+      border: 1px solid transparent;
+      transition: transform 0.12s, box-shadow 0.12s;
+      display: block;
+    }
+    .thumb:active { transform: scale(0.98); }
+    .thumb.active {
+      border-color: #0078d7;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      opacity: 1;
+    }
+    /* Mobile first: thumbnails también se ven en móvil, más pequeños */
+    @media (max-width: 600px) {
+      .thumbnails {
+        gap: 0.3rem;
+        padding: 0.3rem;
+        margin: 6px auto 10px auto;
+      }
+      .thumb { width: 40px; height: 60px; border-radius: 2px; }
     }
     /* Flechas de navegación laterales solo desktop */
     .nav-arrow {
@@ -109,9 +155,11 @@
       }
       .flipbook-container {
         width: 100vw;
-        height: 100vh;
         max-width: 100vw;
-        max-height: 100vh;
+        aspect-ratio: 2 / 3;
+        height: auto;
+        /* leave room for thumbnails (approx. 88-100px) */
+        max-height: calc(100vh - 88px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -146,6 +194,8 @@
     <div class="nav-arrow right">&#62;</div>
     <!-- Página se renderiza aquí -->
   </div>
+  <!-- Contenedor de miniaturas -->
+  <div class="thumbnails" id="thumbnails" aria-hidden="false"></div>
   <script>
     alert('¡Bienvenido a nuestro número de noviembre de Conecta! Haz click en la parte izquierda y derecha de cada página para navegar por la revista 😊');
     // Lista de imágenes de páginas (puedes cambiar las URLs por las de tus páginas)
@@ -182,6 +232,7 @@
     };
     let currentPage = 0;
     const flipbook = document.getElementById('flipbook');
+  const thumbsContainer = document.getElementById('thumbnails');
 
     function renderPage() {
       flipbook.innerHTML = '';
@@ -204,6 +255,40 @@
         pageDiv.appendChild(strip);
       }
       flipbook.appendChild(pageDiv);
+      updateActiveThumb();
+    }
+
+    // Generar thumbnails
+    function createThumbnails() {
+      thumbsContainer.innerHTML = '';
+      pages.forEach((src, i) => {
+        const t = document.createElement('img');
+        t.className = 'thumb';
+        t.src = src;
+        t.alt = `Miniatura página ${i+1}`;
+        t.dataset.index = i;
+        t.addEventListener('click', function(e) {
+          currentPage = i;
+          renderPage();
+        });
+        thumbsContainer.appendChild(t);
+      });
+      updateActiveThumb();
+    }
+
+    function updateActiveThumb() {
+      if (!thumbsContainer) return;
+      const thumbs = Array.from(thumbsContainer.querySelectorAll('.thumb'));
+      thumbs.forEach(t => t.classList.remove('active'));
+      const active = thumbsContainer.querySelector(`.thumb[data-index="${currentPage}"]`);
+      if (active) {
+        active.classList.add('active');
+        // Centrar la miniatura activa en el contenedor
+        const rect = active.getBoundingClientRect();
+        const parentRect = thumbsContainer.getBoundingClientRect();
+        const offset = rect.left - parentRect.left - (parentRect.width/2 - rect.width/2);
+        thumbsContainer.scrollBy({ left: offset, behavior: 'smooth' });
+      }
     }
 
     function goLeft() {
@@ -245,8 +330,7 @@
     });
     // Inicializar
     renderPage();
+    createThumbnails();
   </script>
 </body>
 </html>
-
-
